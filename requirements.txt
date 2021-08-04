@@ -1,0 +1,7 @@
+xlsxwriter
+bokeh
+streamlit_bokeh_events
+google.ads
+pyrebase
+jwt
+streamlit==0.82.0

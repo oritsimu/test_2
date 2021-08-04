@@ -1,0 +1,140 @@
+import streamlit as st
+import base64
+import io
+import pandas as pd
+import xlsxwriter
+from bokeh.models.widgets import Button
+from bokeh.models import CustomJS
+from streamlit_bokeh_events import streamlit_bokeh_events
+from model.Ads import Ads
+from model.Excel import Excel
+from model.Helpers import Helpers
+from model.DataParser import DataParser
+from view.DownloadButtonView import DownloadButtonView
+from model.Network import Network
+
+
+network = Network()
+refresh_token = network.getRefreshTokenForGoogleAdsAPI()
+client_secret = network.getClienSecret()
+client_id = network.getClientID()
+developer_token = network.getDeveloperToken()
+login_customer_id = network.getLoginCustomerID()
+Helpers.updateCredentials(refresh_token, client_secret, client_id, developer_token, login_customer_id)
+__KEYWORD_LIMIT = network.getKeywordLimit()
+
+
+st.set_page_config(layout="wide")
+st.title("The Keyword Research Automator:snake::fire:")
+text = st.text_area("Input your search term (one per line, max {}) and hit Get Keywords to get all the most relevant keywords for each search term. Once the report is ready, hit Download Results to get all related keywords by term in one excel with different tabs ⬇️".format(str(__KEYWORD_LIMIT)), height=150, key=1)
+
+
+lines = text.split("\n")  # A list of lines
+keywords = Helpers.removeRestrictedCharactersAndWhiteSpaces(lines)
+
+
+data_parser = DataParser() #TODO save lists as binary to speed up the process
+parent_locations = data_parser.get_parent_locations()
+languages = data_parser.get_languages()
+
+
+selected_countries = st.multiselect('Country', parent_locations)
+selected_language = st.selectbox('Language', languages)
+
+
+location_ids = data_parser.get_parent_location_ids(selected_countries)
+language_id = data_parser.get_language_id(selected_language)
+
+
+start_execution = st.button("Get Keywords! 🤘")
+
+
+if start_execution:
+
+    if len(keywords) == 0:
+
+        st.warning("Please enter at least 1 keyword.")
+
+    elif len(keywords) > __KEYWORD_LIMIT:
+
+        st.warning("Please enter at most {} keywords.".format(str(__KEYWORD_LIMIT)))
+
+    else:
+
+        error_flag = False #If there is an unexpected error with the API, the rest of the code won't be processed and a warning message will appear.
+
+        columns = []
+        rows = []
+
+        for i in range(len(keywords)):
+
+            keyword = [keywords[i]]
+
+            ads = Ads(location_ids = location_ids, language_id = language_id)
+
+            try:
+
+                ideas = ads.run(keyword)
+
+                row = []
+
+                for j in range(len(ideas)):
+
+                    try:
+                        len_of_row = int(len(rows[j]))
+                        num_of_nones = 2*i - len_of_row
+                        none_list = [None]*num_of_nones
+                        rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                    except IndexError:
+                        num_of_nones = 2*i
+                        none_list = [None]*num_of_nones
+                        row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                        rows.append(row)
+
+                columns += ["Keyword", "Avg. Monthly Searches"]
+
+            except:
+
+                st.warning("Service is currently unavailable because of the high traffic :(")
+                error_flag = True
+
+
+        if not error_flag:
+
+            dataframe = pd.DataFrame(rows, columns = columns)
+
+            st.write(dataframe) #Table creation
+
+            copy_button = Button(label="Copy to Clipboard")
+            copy_button.js_on_event("button_click", CustomJS(args=dict(df=dataframe.to_csv(sep='\t')), code="""
+            navigator.clipboard.writeText(df);
+            """))
+
+            no_event = streamlit_bokeh_events(
+                copy_button,
+                events="GET_TEXT",
+                key="get_text",
+                refresh_on_update=True,
+                override_height=40,
+                debounce_time=0)
+
+            towrite = io.BytesIO()
+            writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
+
+            downloaded_file = dataframe.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
+
+            for i in range(0, (len(columns))//2):
+                current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
+                dataframe = pd.DataFrame(current_row, columns = columns[:2])
+                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+
+
+            writer.save()
+            towrite.seek(0)  # reset pointer
+            b64 = base64.b64encode(towrite.read()).decode()  # some strings
+            custom_css, button_id = DownloadButtonView.getCustomCSS()
+            linko = custom_css + f'<a id="{button_id}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="results.xlsx">Download KWs Excel</a>'
+
+            st.markdown(linko, unsafe_allow_html=True)
+
+            st.write("#")
