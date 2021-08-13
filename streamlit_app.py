@@ -38,7 +38,7 @@ parent_locations = data_parser.get_parent_locations()
 languages = data_parser.get_languages()
 
 
-selected_countries = st.multiselect('Country', parent_locations)
+selected_countries = st.multiselect('Country', parent_locations, default=["United States"])
 selected_language = st.selectbox('Language', languages)
 
 
@@ -105,18 +105,6 @@ if start_execution:
 
             st.write(dataframe) #Table creation
 
-            copy_button = Button(label="Copy to Clipboard")
-            copy_button.js_on_event("button_click", CustomJS(args=dict(df=dataframe.to_csv(sep='\t')), code="""
-            navigator.clipboard.writeText(df);
-            """))
-
-            no_event = streamlit_bokeh_events(
-                copy_button,
-                events="GET_TEXT",
-                key="get_text",
-                refresh_on_update=True,
-                override_height=40,
-                debounce_time=0)
 
             towrite = io.BytesIO()
             writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
