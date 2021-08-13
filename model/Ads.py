@@ -26,7 +26,7 @@ class Ads:
 
     # default location ID for New York
     # default language ID for English
-    def __init__(self, location_ids = ["1023191"], language_id = "1000"):
+    def __init__(self, location_ids = ["2840"], language_id = "1000"):
         self.__googleads_client = GoogleAdsClient.load_from_storage(self.__CREDENTIALS_PATH)
         self.__DEFAULT_LOCATION_IDS = location_ids
         self.__DEFAULT_LANGUAGE_ID = language_id
