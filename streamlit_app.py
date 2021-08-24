@@ -65,38 +65,38 @@ if start_execution:
 
         columns = []
         rows = []
+        
+        ads = Ads(location_ids = location_ids, language_id = language_id)
 
         for i in range(len(keywords)):
 
             keyword = [keywords[i]]
 
-            ads = Ads(location_ids = location_ids, language_id = language_id)
+            #try:
 
-            try:
+            ideas = ads.run(keyword)
 
-                ideas = ads.run(keyword)
+            row = []
 
-                row = []
+            for j in range(len(ideas)):
 
-                for j in range(len(ideas)):
+                try:
+                    len_of_row = int(len(rows[j]))
+                    num_of_nones = 2*i - len_of_row
+                    none_list = [None]*num_of_nones
+                    rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                except IndexError:
+                    num_of_nones = 2*i
+                    none_list = [None]*num_of_nones
+                    row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                    rows.append(row)
 
-                    try:
-                        len_of_row = int(len(rows[j]))
-                        num_of_nones = 2*i - len_of_row
-                        none_list = [None]*num_of_nones
-                        rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                    except IndexError:
-                        num_of_nones = 2*i
-                        none_list = [None]*num_of_nones
-                        row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                        rows.append(row)
+            columns += ["Keyword", "Avg. Monthly Searches"]
 
-                columns += ["Keyword", "Avg. Monthly Searches"]
+            #except:
 
-            except:
-
-                st.warning("Service is currently unavailable because of the high traffic :(")
-                error_flag = True
+                #st.warning("Service is currently unavailable because of the high traffic :(")
+                #error_flag = True
 
 
         if not error_flag:
