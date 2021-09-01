@@ -6,6 +6,8 @@ import xlsxwriter
 from bokeh.models.widgets import Button
 from bokeh.models import CustomJS
 from streamlit_bokeh_events import streamlit_bokeh_events
+import time
+from stqdm import stqdm
 from model.Ads import Ads
 from model.Excel import Excel
 from model.Helpers import Helpers
@@ -67,36 +69,44 @@ if start_execution:
         rows = []
         
         ads = Ads(location_ids = location_ids, language_id = language_id)
+        
+        saved_time = 0
 
-        for i in range(len(keywords)):
+        for i in stqdm(range(len(keywords))):
 
             keyword = [keywords[i]]
+            
+            current_time = time.time()
+            diff_time = current_time - saved_time
+            sleep_time = 1 - diff_time
+            if sleep_time > 0:
+                time.sleep(sleep_time) #API Limitations https://developers.google.com/google-ads/api/docs/best-practices/quotas
+            saved_time = time.time()
 
-            #try:
+            try:
 
-            ideas = ads.run(keyword)
+                ideas = ads.run(keyword)
 
-            row = []
+                row = []
 
-            for j in range(len(ideas)):
+                for j in range(len(ideas)):
 
-                try:
-                    len_of_row = int(len(rows[j]))
-                    num_of_nones = 2*i - len_of_row
-                    none_list = [None]*num_of_nones
-                    rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                except IndexError:
-                    num_of_nones = 2*i
-                    none_list = [None]*num_of_nones
-                    row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                    rows.append(row)
+                    try:
+                        len_of_row = int(len(rows[j]))
+                        num_of_nones = 2*i - len_of_row
+                        none_list = [None]*num_of_nones
+                        rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                    except IndexError:
+                        num_of_nones = 2*i
+                        none_list = [None]*num_of_nones
+                        row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                        rows.append(row)
 
-            columns += ["Keyword", "Avg. Monthly Searches"]
+                columns += ["Keyword", "Avg. Monthly Searches"]
 
-            #except:
+            except:
 
-                #st.warning("Service is currently unavailable because of the high traffic :(")
-                #error_flag = True
+                st.warning("Error: {}".format(e))
 
 
         if not error_flag:
