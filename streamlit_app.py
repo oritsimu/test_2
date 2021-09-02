@@ -83,30 +83,32 @@ if start_execution:
                 time.sleep(sleep_time) #API Limitations https://developers.google.com/google-ads/api/docs/best-practices/quotas
             saved_time = time.time()
 
-            #try:
+            try:
 
-            ideas = ads.run(keyword)
+                ideas = ads.run(keyword)
 
-            row = []
+                row = []
 
-            for j in range(len(ideas)):
+                for j in range(len(ideas)):
 
-                try:
-                    len_of_row = int(len(rows[j]))
-                    num_of_nones = 2*i - len_of_row
-                    none_list = [None]*num_of_nones
-                    rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                except IndexError:
-                    num_of_nones = 2*i
-                    none_list = [None]*num_of_nones
-                    row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                    rows.append(row)
+                    try:
+                        len_of_row = int(len(rows[j]))
+                        num_of_nones = 2*i - len_of_row
+                        none_list = [None]*num_of_nones
+                        rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                    except IndexError:
+                        num_of_nones = 2*i
+                        none_list = [None]*num_of_nones
+                        row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                        rows.append(row)
 
-            columns += ["Keyword", "Avg. Monthly Searches"]
+                #columns += ["Keyword", "Avg. Monthly Searches"]
 
-            #except Exception as e:
-
+            except Exception as e:
+                pass
                 #st.warning("Error: {}".format(e))
+            finally:
+                columns += ["Keyword", "Avg. Monthly Searches"]
 
 
         #if not error_flag:
