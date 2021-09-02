@@ -62,6 +62,9 @@ if start_execution:
         st.warning("Please enter at most {} keywords.".format(str(__KEYWORD_LIMIT)))
 
     else:
+        
+        none_keywords = []
+        none_keyword_counter = 0
 
         error_flag = False #If there is an unexpected error with the API, the rest of the code won't be processed and a warning message will appear.
 
@@ -109,6 +112,7 @@ if start_execution:
                 #st.warning("Error: {}".format(e))
             finally:
                 columns += ["Keyword", "Avg. Monthly Searches"]
+                none_keywords.append(keyword[0])
 
 
         #if not error_flag:
@@ -126,7 +130,11 @@ if start_execution:
         for i in range(0, (len(columns))//2):
             current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
             dataframe = pd.DataFrame(current_row, columns = columns[:2])
-            downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+            try:
+                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+            except:
+                downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter], encoding='utf-8', header=True, index=False)
+                none_keyword_counter+=1
 
 
         writer.save()
