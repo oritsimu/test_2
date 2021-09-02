@@ -104,35 +104,35 @@ if start_execution:
 
                 columns += ["Keyword", "Avg. Monthly Searches"]
 
-            except:
+            except Exception as e:
 
                 st.warning("Error: {}".format(e))
 
 
-        if not error_flag:
+        #if not error_flag:
 
-            dataframe = pd.DataFrame(rows, columns = columns)
+        dataframe = pd.DataFrame(rows, columns = columns)
 
-            st.write(dataframe) #Table creation
-
-
-            towrite = io.BytesIO()
-            writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
-
-            downloaded_file = dataframe.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
-
-            for i in range(0, (len(columns))//2):
-                current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
-                dataframe = pd.DataFrame(current_row, columns = columns[:2])
-                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+        st.write(dataframe) #Table creation
 
 
-            writer.save()
-            towrite.seek(0)  # reset pointer
-            b64 = base64.b64encode(towrite.read()).decode()  # some strings
-            custom_css, button_id = DownloadButtonView.getCustomCSS()
-            linko = custom_css + f'<a id="{button_id}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="results.xlsx">Download KWs Excel</a>'
+        towrite = io.BytesIO()
+        writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
 
-            st.markdown(linko, unsafe_allow_html=True)
+        downloaded_file = dataframe.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
 
-            st.write("#")
+        for i in range(0, (len(columns))//2):
+            current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
+            dataframe = pd.DataFrame(current_row, columns = columns[:2])
+            downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+
+
+        writer.save()
+        towrite.seek(0)  # reset pointer
+        b64 = base64.b64encode(towrite.read()).decode()  # some strings
+        custom_css, button_id = DownloadButtonView.getCustomCSS()
+        linko = custom_css + f'<a id="{button_id}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="results.xlsx">Download KWs Excel</a>'
+
+        st.markdown(linko, unsafe_allow_html=True)
+
+        st.write("#")
