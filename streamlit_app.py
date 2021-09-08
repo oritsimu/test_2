@@ -125,7 +125,7 @@ if start_execution:
         rows_all = []
         for row in rows:
             rows_all += row
-        print(rows_all[:3])
+        st.warning("Rows all: {}".format(str(rows_all[:3])))
         rows_all = sorted(rows_all, key=lambda x: x[1], reverse=True)
         dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
         
