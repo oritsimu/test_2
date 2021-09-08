@@ -120,12 +120,19 @@ if start_execution:
         dataframe = pd.DataFrame(rows, columns = columns)
 
         st.write(dataframe) #Table creation
+        
+        
+        rows_all = []
+        for row in rows:
+            rows_all += row
+        rows_all = sorted(rows_all, key=lambda x: x[1], reverse=True)
+        dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
 
 
         towrite = io.BytesIO()
         writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
 
-        downloaded_file = dataframe.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
+        downloaded_file = dataframe_all.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
 
         for i in range(0, (len(columns))//2):
             current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
