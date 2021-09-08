@@ -127,7 +127,7 @@ if start_execution:
             rows_all += row
         rows_all = sorted(rows_all, key=lambda x: x[1], reverse=True)
         dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
-
+        print(rows_all[:3])
 
         towrite = io.BytesIO()
         writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
