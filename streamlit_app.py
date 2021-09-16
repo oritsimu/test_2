@@ -35,7 +35,7 @@ lines = text.split("\n")  # A list of lines
 keywords = Helpers.removeRestrictedCharactersAndWhiteSpaces(lines)
 
 
-data_parser = DataParser() #TODO save lists as binary to speed up the process
+data_parser = DataParser() 
 parent_locations = data_parser.get_parent_locations()
 languages = data_parser.get_languages()
 
@@ -47,6 +47,7 @@ selected_language = st.selectbox('Language', languages)
 location_ids = data_parser.get_parent_location_ids(selected_countries)
 language_id = data_parser.get_language_id(selected_language)
 
+st.text('You have {} KWs out of the max {} KWs'.format(str(len(keywords)), str(__KEYWORD_LIMIT)))
 
 start_execution = st.button("Get Keywords! 🤘")
 
