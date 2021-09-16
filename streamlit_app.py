@@ -34,6 +34,7 @@ text = st.text_area("Input your search term (one per line, max {}) and hit Get K
 lines = text.split("\n")  # A list of lines
 keywords = Helpers.removeRestrictedCharactersAndWhiteSpaces(lines)
 
+st.text('You have {} KWs out of the max {} KWs'.format(str(len(keywords)), str(__KEYWORD_LIMIT)))
 
 data_parser = DataParser() 
 parent_locations = data_parser.get_parent_locations()
@@ -47,7 +48,6 @@ selected_language = st.selectbox('Language', languages)
 location_ids = data_parser.get_parent_location_ids(selected_countries)
 language_id = data_parser.get_language_id(selected_language)
 
-st.text('You have {} KWs out of the max {} KWs'.format(str(len(keywords)), str(__KEYWORD_LIMIT)))
 
 start_execution = st.button("Get Keywords! 🤘")
 
