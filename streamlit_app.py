@@ -130,7 +130,7 @@ if start_execution:
         for i in range(0, len(rows_all), 2):
             rows_all_edited.append([rows_all[i], rows_all[i+1]])
             
-        rows_all = sorted(rows_all_edited, key=lambda x: x[1], reverse=True)
+        rows_all = sorted(rows_all_edited, key=lambda x: x[1] if x[1] is not None else 0, reverse=True)
         dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
         
 
