@@ -109,8 +109,6 @@ if start_execution:
                             rows.append(row)
                 else:
                     none_keywords.append(keyword[0])
-                st.write(len(ideas))
-                st.write(none_keywords)
 
                 #columns += ["Keyword", "Avg. Monthly Searches"]
 
@@ -149,10 +147,8 @@ if start_execution:
             current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
             dataframe = pd.DataFrame(current_row, columns = columns[:2])
             try:
-                st.write("try: " + current_row[0][0])
                 downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0][:31], encoding='utf-8', header=True, index=False)
             except:
-                st.write("except: " + none_keywords[none_keyword_counter])
                 downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter][:31], encoding='utf-8', header=True, index=False)
                 none_keyword_counter+=1
 
