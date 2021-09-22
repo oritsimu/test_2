@@ -105,6 +105,7 @@ if start_execution:
                         none_list = [None]*num_of_nones
                         row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                         rows.append(row)
+                        none_keywords.append(keyword[0])
 
                 #columns += ["Keyword", "Avg. Monthly Searches"]
 
@@ -113,7 +114,7 @@ if start_execution:
                 #st.warning("Error: {}".format(e))
             finally:
                 columns += ["Keyword", "Avg. Monthly Searches"]
-                none_keywords.append(keyword[0])
+                
 
 
         #if not error_flag:
