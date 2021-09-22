@@ -143,10 +143,10 @@ if start_execution:
             current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
             dataframe = pd.DataFrame(current_row, columns = columns[:2])
             try:
-                st.write(current_row[0][0])
+                st.write("try: " + current_row[0][0])
                 downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
             except:
-                st.write(none_keywords[none_keyword_counter])
+                st.write("except: " + none_keywords[none_keyword_counter])
                 downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter], encoding='utf-8', header=True, index=False)
                 none_keyword_counter+=1
 
