@@ -109,6 +109,8 @@ if start_execution:
                             rows.append(row)
                 else:
                     none_keywords.append(keyword[0])
+                st.write(len(ideas))
+                st.write(none_keywords)
 
                 #columns += ["Keyword", "Avg. Monthly Searches"]
 
