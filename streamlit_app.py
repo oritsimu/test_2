@@ -150,10 +150,10 @@ if start_execution:
             dataframe = pd.DataFrame(current_row, columns = columns[:2])
             try:
                 st.write("try: " + current_row[0][0])
-                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0], encoding='utf-8', header=True, index=False)
+                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0][:31], encoding='utf-8', header=True, index=False)
             except:
                 st.write("except: " + none_keywords[none_keyword_counter])
-                downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter], encoding='utf-8', header=True, index=False)
+                downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter][:31], encoding='utf-8', header=True, index=False)
                 none_keyword_counter+=1
 
 
