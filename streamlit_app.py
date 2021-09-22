@@ -92,20 +92,23 @@ if start_execution:
                 ideas = ads.run(keyword)
 
                 row = []
+                
+                if len(ideas) > 0:
 
-                for j in range(len(ideas)):
+                    for j in range(len(ideas)):
 
-                    try:
-                        len_of_row = int(len(rows[j]))
-                        num_of_nones = 2*i - len_of_row
-                        none_list = [None]*num_of_nones
-                        rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                    except IndexError:
-                        num_of_nones = 2*i
-                        none_list = [None]*num_of_nones
-                        row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
-                        rows.append(row)
-                        none_keywords.append(keyword[0])
+                        try:
+                            len_of_row = int(len(rows[j]))
+                            num_of_nones = 2*i - len_of_row
+                            none_list = [None]*num_of_nones
+                            rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                        except IndexError:
+                            num_of_nones = 2*i
+                            none_list = [None]*num_of_nones
+                            row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                            rows.append(row)
+                else:
+                    none_keywords.append(keyword[0])
 
                 #columns += ["Keyword", "Avg. Monthly Searches"]
 
