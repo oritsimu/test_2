@@ -93,7 +93,7 @@ if start_execution:
 
                 row = []
                 
-                if len(ideas) > 0:
+                if len(ideas) > 1:
 
                     for j in range(len(ideas)):
 
