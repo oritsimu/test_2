@@ -136,7 +136,7 @@ if start_execution:
             
         rows_all = sorted(rows_all_edited, key=lambda x: x[1] if x[1] is not None else 0, reverse=True)
         dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
-        dataframe_all.drop_duplicates()
+        dataframe_all.drop_duplicates(subset = ["Keyword", "Avg. Monthly Searches"], keep = False, inplace = True)
 
         towrite = io.BytesIO()
         writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
