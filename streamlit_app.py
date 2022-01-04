@@ -17,6 +17,43 @@ from model.Network import Network
 
 
 network = Network()
+st.set_page_config(layout="wide")
+
+
+scopes = ["https://www.googleapis.com/auth/adwords"]
+
+secrets = {"installed":{"client_id":st.secrets["client_id"],"project_id":st.secrets["project_id"],"auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":st.secrets["client_secret"],"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
+
+flow = Flow.from_client_config(
+    secrets, scopes=scopes, redirect_uri='urn:ietf:wg:oauth:2.0:oob'
+)
+
+auth_url, _ = flow.authorization_url(prompt='consent')
+
+st.text('Please go to this URL if the token is expired:\n{}'.format(auth_url))
+
+authorization_code = st.text_input('Enter the authorization code: ')
+
+st.text(authorization_code)
+
+
+enter_auth_code = st.button("Refresh Token")
+
+if enter_auth_code:
+
+    token = flow.fetch_token(code=authorization_code)
+    
+    refresh_token = token["refresh_token"]
+
+    st.text("Refresh token: {}".format(str(refresh_token)))
+    st.text("Refreshing token ...")
+    
+    network.setRefreshTokenForGoogleAdsAPI(refresh_token)
+
+    st.text("Token has been refreshed!")
+
+
+
 refresh_token = network.getRefreshTokenForGoogleAdsAPI()
 client_secret = network.getClienSecret()
 client_id = network.getClientID()
@@ -26,7 +63,7 @@ Helpers.updateCredentials(refresh_token, client_secret, client_id, developer_tok
 __KEYWORD_LIMIT = network.getKeywordLimit()
 
 
-st.set_page_config(layout="wide")
+
 st.title("The Keyword Research Automator:snake::fire:")
 text = st.text_area("Input your search term (one per line, max {}) and hit Get Keywords to get all the most relevant keywords for each search term. Once the report is ready, hit Download Results to get all related keywords by term in one excel with different tabs ⬇️".format(str(__KEYWORD_LIMIT)), height=150, key=1)
 
