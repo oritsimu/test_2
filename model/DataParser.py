@@ -5,6 +5,8 @@ class DataParser:
     __LOCATIONS_FILE_PATH = "data/geotargets.csv"
     __LANGUAGES_FILE_PATH = "data/languagecodes.csv"
 
+    __main_codes_by_locations = {} #KEY: Location ID, VALUE: Location Code
+    __main_locations_by_country_code = {} #KEY: Location Code, VALUE: Location ID
     __main_locations = {} #KEY: Location Name, VALUE: Location ID
     __sub_locations = {} #KEY: Location Name, VALUE: Location ID
     __main_sub_location_connector = {} #KEY: Location ID, VALUE: [sub_location_ids]
@@ -40,6 +42,12 @@ class DataParser:
             location_id = splitted[0]
             location_name = splitted[1]
             parent_location_id = splitted[3]
+            location_code = splitted[-3]
+            location_type = splitted[-2]
+            
+            if location_type == "Country":
+                self.__main_locations_by_country_code[location_code] = location_id
+                self.__main_codes_by_locations[location_id] = location_code
 
             try: #Main Location
                 parent_location_id = str(int(parent_location_id))
@@ -71,6 +79,19 @@ class DataParser:
 
     def get_languages(self):
         return [self.__DEFAUT_LANGUAGE] + list(self.__languages.keys())
+    
+    
+    def get_location_id_by_code(self, location_code):
+        try:
+            return self.__main_locations_by_country_code[location_code]
+        except:
+            return
+        
+    def get_code_by_location_id(self, loc_id):
+        try:
+            return self.__main_codes_by_locations[loc_id]
+        except:
+            return
 
 
     def get_location_id(self, location):
