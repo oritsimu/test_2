@@ -110,13 +110,12 @@ if start_execution:
         columns = []
         rows = []
         
-        ads = Ads(location_ids = location_ids, language_id = language_id)
         
         saved_time = 0
 
         for i in stqdm(range(len(keywords))):
 
-            keyword = [keywords[i]]
+            keyword = keywords[i]
             
             current_time = time.time()
             diff_time = current_time - saved_time
@@ -124,37 +123,70 @@ if start_execution:
             if sleep_time > 0:
                 time.sleep(sleep_time) #API Limitations https://developers.google.com/google-ads/api/docs/best-practices/quotas
             saved_time = time.time()
+            
+            geo_identifier = ""	
+            if "-" in keyword:	
+                splitted = keyword.split("-")	
+                keyword = [splitted[0]]	
+                geo_identifier_text = splitted[1]	
+                	
+                if geo_identifier_text == "UK":	
+                    geo_identifier_text = "GB"	
+                	
+                loc_id = data_parser.get_location_id_by_code(geo_identifier_text)	
+                	
+                if loc_id is None:	
+                    st.warning(geo_identifier_text + " does not exist.")	
+                    continue	
+                        	
+                ads = Ads(location_ids = [loc_id], language_id = language_id)	
+                	
+            else:	
+                	
+                keyword = [keyword]	
+                	
+                for e in location_ids:	
+                    loc_code = data_parser.get_code_by_location_id(e)	
+                    geo_identifier += loc_code + "-"	
+                geo_identifier_text = geo_identifier[:-1]	
+                ads = Ads(location_ids = location_ids, language_id = language_id)
 
+                
             try:
 
                 ideas = ads.run(keyword)
 
                 row = []
                 
+                
                 if len(ideas) > 1:
 
                     for j in range(len(ideas)):
+                        
+                        if geo_identifier_text == "GB":	
+                            geo_identifier_text = "UK"	
+                            
 
                         try:
                             len_of_row = int(len(rows[j]))
                             num_of_nones = 2*i - len_of_row
                             none_list = [None]*num_of_nones
-                            rows[j] += none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                            rows[j] += none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                         except IndexError:
                             num_of_nones = 2*i
                             none_list = [None]*num_of_nones
-                            row = none_list + [ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                            row = none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                             rows.append(row)
                 else:
                     none_keywords.append(keyword[0])
 
-                #columns += ["Keyword", "Avg. Monthly Searches"]
+                #columns += ["Location", "Keyword", "Avg. Monthly Searches"]
 
             except Exception as e:
                 pass
                 #st.warning("Error: {}".format(e))
             finally:
-                columns += ["Keyword", "Avg. Monthly Searches"]
+                columns += ["Location", "Keyword", "Avg. Monthly Searches"]
                 
 
 
@@ -173,8 +205,8 @@ if start_execution:
             rows_all_edited.append([rows_all[i], rows_all[i+1]])
             
         rows_all = sorted(rows_all_edited, key=lambda x: x[1] if x[1] is not None else 0, reverse=True)
-        dataframe_all = pd.DataFrame(rows_all, columns = ["Keyword", "Avg. Monthly Searches"])
-        dataframe_all.drop_duplicates(subset = ["Keyword", "Avg. Monthly Searches"], keep = 'first', inplace = True)
+        dataframe_all = pd.DataFrame(rows_all, columns = ["Location", "Keyword", "Avg. Monthly Searches"])
+        dataframe_all.drop_duplicates(subset = ["Location", "Keyword", "Avg. Monthly Searches"], keep = 'first', inplace = True)
 
         towrite = io.BytesIO()
         writer = pd.ExcelWriter(towrite, engine='xlsxwriter')
