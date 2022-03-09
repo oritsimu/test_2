@@ -169,11 +169,11 @@ if start_execution:
 
                         try:
                             len_of_row = int(len(rows[j]))
-                            num_of_nones = 2*i - len_of_row
+                            num_of_nones = 3*i - len_of_row
                             none_list = [None]*num_of_nones
                             rows[j] += none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                         except IndexError:
-                            num_of_nones = 2*i
+                            num_of_nones = 3*i
                             none_list = [None]*num_of_nones
                             row = none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                             rows.append(row)
@@ -201,10 +201,10 @@ if start_execution:
         for row in rows:
             rows_all += row
         rows_all_edited = []
-        for i in range(0, len(rows_all), 2):
-            rows_all_edited.append([rows_all[i], rows_all[i+1]])
+        for i in range(0, len(rows_all), 3):
+            rows_all_edited.append([rows_all[i], rows_all[i+1], rows_all[i+2]])
             
-        rows_all = sorted(rows_all_edited, key=lambda x: x[1] if x[1] is not None else 0, reverse=True)
+        rows_all = sorted(rows_all_edited, key=lambda x: x[2] if x[2] is not None else 0, reverse=True)
         dataframe_all = pd.DataFrame(rows_all, columns = ["Location", "Keyword", "Avg. Monthly Searches"])
         dataframe_all.drop_duplicates(subset = ["Location", "Keyword", "Avg. Monthly Searches"], keep = 'first', inplace = True)
 
@@ -213,8 +213,8 @@ if start_execution:
 
         downloaded_file = dataframe_all.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
 
-        for i in range(0, (len(columns))//2):
-            current_row = [[e[2*i], e[2*i+1]] for e in rows if len(e) >= 2*i+2]
+        for i in range(0, (len(columns))//3):
+            current_row = [[e[3*i], e[3*i+1]] for e in rows if len(e) >= 3*i+3]
             dataframe = pd.DataFrame(current_row, columns = columns[:2])
             try:
                 downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0][:31], encoding='utf-8', header=True, index=False)
