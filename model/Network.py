@@ -38,34 +38,34 @@ class Network:
         self.__user = self.__auth.sign_in_with_email_and_password(email, password)
 
     def getRefreshTokenForGoogleAdsAPI(self):
-        refresh_token_response = self.__db.child("refresh_token").get(token=self.__user['idToken']).val()
+        refresh_token_response = self.__db.child("refresh_token_test").get(token=self.__user['idToken']).val()
         return str(refresh_token_response)
     
     def setRefreshTokenForGoogleAdsAPI(self, refresh_token):
-        self.__db.update({"refresh_token": refresh_token}, token=self.__user['idToken'])
+        self.__db.update({"refresh_token_test": refresh_token}, token=self.__user['idToken'])
 
     def getKeywordLimit(self):
         keyword_limit = self.__db.child("keyword_limit").get(token=self.__user['idToken']).val()
         return int(keyword_limit)
 
     def getLoginCustomerID(self):
-        login_customer_id = self.__db.child("login-customer-id").get(token=self.__user['idToken']).val()
+        login_customer_id = self.__db.child("login-customer-id-test").get(token=self.__user['idToken']).val()
         return str(login_customer_id)
 
     def getDeveloperToken(self):
-        developer_token = self.__db.child("developer_token").get(token=self.__user['idToken']).val()
+        developer_token = self.__db.child("developer_token_test").get(token=self.__user['idToken']).val()
         return str(developer_token)
 
     def getClientID(self):
-        client_id = self.__db.child("client_id").get(token=self.__user['idToken']).val()
+        client_id = self.__db.child("client_id_test").get(token=self.__user['idToken']).val()
         return str(client_id)
 
     def getClienSecret(self):
-        client_secret = self.__db.child("client_secret").get(token=self.__user['idToken']).val()
+        client_secret = self.__db.child("client_secret_test").get(token=self.__user['idToken']).val()
         return str(client_secret)
 
     def getTestMCCID(self):
-        test_mcc_id = self.__db.child("test_mcc_id").get(token=self.__user['idToken']).val()
+        test_mcc_id = self.__db.child("test_mcc_id_test").get(token=self.__user['idToken']).val()
         return str(test_mcc_id)
 
 
