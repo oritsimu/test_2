@@ -23,7 +23,7 @@ st.set_page_config(layout="wide")
 
 scopes = ["https://www.googleapis.com/auth/adwords"]
 
-secrets = {"installed":{"client_id":st.secrets["client_id"],"project_id":st.secrets["project_id"],"auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":st.secrets["client_secret"],"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
+secrets = {"installed":{"client_id":st.secrets["client_id_test"],"project_id":st.secrets["project_id_test"],"auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":st.secrets["client_secret_test"],"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
 
 flow = Flow.from_client_config(
     secrets, scopes=scopes, redirect_uri='urn:ietf:wg:oauth:2.0:oob'
