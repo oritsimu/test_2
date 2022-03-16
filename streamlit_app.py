@@ -171,10 +171,28 @@ if start_execution:
                             len_of_row = int(len(rows[j]))
                             num_of_nones = 3*i - len_of_row
                             none_list = [None]*num_of_nones
+                            
+                            #DEBUG
+                            st.text("ideas[j].text: " + str(len(ideas[j].text)))
+                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: " + str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
+                            st.text("geo_identifier_text: " + str(len(geo_identifier_text)))
+                            #DEBUG
+                            
+                            
                             rows[j] += none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
+                            
+                            
                         except IndexError:
                             num_of_nones = 3*i
                             none_list = [None]*num_of_nones
+                            
+                            #DEBUG
+                            st.text("ideas[j].text: " + str(len(ideas[j].text)))
+                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: " + str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
+                            st.text("geo_identifier_text: " + str(len(geo_identifier_text)))
+                            #DEBUG
+                            
+                            
                             row = none_list + [geo_identifier_text, ideas[j].text, ideas[j].keyword_idea_metrics.avg_monthly_searches]
                             rows.append(row)
                 else:
@@ -214,8 +232,8 @@ if start_execution:
         downloaded_file = dataframe_all.to_excel(writer, sheet_name="All Keywords", encoding='utf-8', header=True, index=False)
 
         for i in range(0, (len(columns))//3):
-            current_row = [[e[3*i], e[3*i+1]] for e in rows if len(e) >= 3*i+3]
-            dataframe = pd.DataFrame(current_row, columns = columns[:2])
+            current_row = [[e[3*i], e[3*i+1]], e[3*i+2]] for e in rows if len(e) >= 3*i+3]
+            dataframe = pd.DataFrame(current_row, columns = columns[:3])
             try:
                 downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0][:31], encoding='utf-8', header=True, index=False)
             except:
