@@ -172,9 +172,10 @@ if start_execution:
                             num_of_nones = 3*i - len_of_row
                             none_list = [None]*num_of_nones
                             
+                            
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
+                            st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
                             #DEBUG
                             
                             
@@ -185,9 +186,10 @@ if start_execution:
                             num_of_nones = 3*i
                             none_list = [None]*num_of_nones
                             
+                            
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
+                            st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
                             #DEBUG
                             
                             
