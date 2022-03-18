@@ -237,7 +237,7 @@ if start_execution:
             current_row = [[e[3*i], e[3*i+1], e[3*i+2]] for e in rows if len(e) >= 3*i+3]
             dataframe = pd.DataFrame(current_row, columns = columns[:3])
             try:
-                downloaded_file = dataframe.to_excel(writer, sheet_name=current_row[0][0][:31], encoding='utf-8', header=True, index=False)
+                downloaded_file = dataframe.to_excel(writer, sheet_name=(current_row[0][1] + current_row[0][0])[:31], encoding='utf-8', header=True, index=False)
             except:
                 downloaded_file = dataframe.to_excel(writer, sheet_name=none_keywords[none_keyword_counter][:31], encoding='utf-8', header=True, index=False)
                 none_keyword_counter+=1
