@@ -174,7 +174,7 @@ if start_execution:
                             
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches))))
+                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
                             #DEBUG
                             
                             
@@ -187,7 +187,7 @@ if start_execution:
                             
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches))))
+                            st.text("ideas[j].keyword_idea_metrics.avg_monthly_searches: {}".format(str(ideas[j].keyword_idea_metrics.avg_monthly_searches)))
                             #DEBUG
                             
                             
