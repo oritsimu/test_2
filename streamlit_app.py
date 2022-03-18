@@ -175,7 +175,7 @@ if start_execution:
                             
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
+                            #st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
                             #DEBUG
                             
                             
@@ -189,7 +189,7 @@ if start_execution:
                             
                             #DEBUG
                             #st.text("ideas[j].text: {}, ideas[j].keyword_idea_metrics.avg_monthly_searches: {}, geo_identifier_text: {}".format(str(len(ideas[j].text)), str(len(ideas[j].keyword_idea_metrics.avg_monthly_searches)), str(len(geo_identifier_text))))
-                            st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
+                            #st.text("geo_identifier_text: {}".format(str(geo_identifier_text)))
                             #DEBUG
                             
                             
@@ -211,8 +211,10 @@ if start_execution:
         #if not error_flag:
 
         dataframe = pd.DataFrame(rows, columns = columns)
+        
+        st.text("len_rows: {}, len_rows_0: {}, len_cols: {}".format(len(rows), len(rows[0]), len(columns)))
 
-        st.write(dataframe) #Table creation
+        #st.write(dataframe) #Table creation
         
         
         rows_all = []
